@@ -14,10 +14,10 @@ hours :: IO Hours -- get all hours for all teachers
 
 ## Setup
 
-You need an account and to grab your `cartalyst_sentry` cookie from the web app.
+You need an account and to grab your `laravel_session` and `cartalyst_sentry` cookies from the web app.
 
 ```
-export BASELANG_TOKEN=${cartalyst_sentry}
+export BASELANG_TOKEN=laravel_session=..;cartalyst_sentry=..
 ```
 
 ## Run

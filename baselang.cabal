@@ -23,8 +23,8 @@ library
                      , time
                      , hxt
                      , HandsomeSoup
-                     , parallel
                      , transformers
+                     , async
 
 executable baselang
   hs-source-dirs:      src
@@ -38,5 +38,5 @@ executable baselang
                      , time
                      , hxt
                      , HandsomeSoup
-                     , parallel
                      , transformers
+                     , async

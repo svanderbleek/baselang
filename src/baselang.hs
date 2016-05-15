@@ -7,7 +7,6 @@ module Baselang
 import           Control.Lens                ((&), (.~), (^.))
 import           Control.Monad.Trans.Class   (lift)
 import           Control.Monad.Trans.Maybe   (MaybeT (..))
-import           Control.Parallel.Strategies (parMap, rseq)
 import           Data.ByteString.Char8       (pack)
 import           Data.ByteString.Lazy        (ByteString)
 import qualified Data.ByteString.Lazy        as LBS
@@ -18,6 +17,7 @@ import           System.Environment          (lookupEnv)
 import           Text.HandsomeSoup           (css, (!))
 import           Text.XML.HXT.Core           (readString, runX, withParseHTML,
                                               yes, (>>>))
+import           Control.Concurrent.Async    (mapConcurrently)
 
 type Teacher = Int
 type Token = String
@@ -30,7 +30,7 @@ base :: String
 base = "https://web.baselang.com/classes/calendar/"
 
 lookupToken :: MaybeT IO Token
-lookupToken = ("cartalyst_sentry="++) <$> MaybeT (lookupEnv "BASELANG_TOKEN")
+lookupToken = MaybeT (lookupEnv "BASELANG_TOKEN")
 
 options :: Token -> Options
 options token = defaults
@@ -57,8 +57,8 @@ getHours teacher = fromMaybeT [] $ lookupToken
   >>= MaybeT . return . readBody
   >>= lift . parseHours
 
-parGet :: [Teacher] -> IO [Hours]
-parGet teachers = sequence $ parMap rseq getHours teachers
+teachers :: [Teacher]
+teachers = [21,23,24,25,26,46,47,48,50,51,52,53,54,170,181,184,190,196,197,198,199,322]
 
 hours :: IO Hours
-hours = concat <$> parGet [1..400]
+hours = concat <$> mapConcurrently getHours teachers
